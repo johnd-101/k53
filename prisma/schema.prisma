@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  Controls
+  Rules
+  Signs
+}
+
+enum CorrectAnswer {
+  A
+  B
+  C
+}
+
+model LearnerQuestion {
+  id            Int           @id @default(autoincrement())
+  questionText  String        @map("question_text") @db.Text
+  optionA       String        @map("option_a") @db.Text
+  optionB       String        @map("option_b") @db.Text
+  optionC       String        @map("option_c") @db.Text
+  correctAnswer CorrectAnswer @map("correct_answer") 
+  category      Category     
+  explanation   String?       @db.Text
+  imageData     String?       @map("image_data") @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  @@index([category], name: "idx_category")
+  @@map("learner_questions")
+}
